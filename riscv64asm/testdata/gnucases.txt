@@ -1,0 +1,22 @@
+9382f27f|	addi x5, x5, 2047
+93820280|	addi x5, x5, -2048
+13931200|	slli x6, x5, 1
+93a37203|	slti x7, x5, 55
+93b37203|	sltiu x7, x5, 55
+13f31200|	andi x6, x5, 1
+13e31200|	ori x6, x5, 1
+13c31200|	xori x6, x5, 1
+13931200|	slli x6, x5, 1
+13d31200|	srli x6, x5, 1
+13d31240|	srai x6, x5, 1
+b3836200|	add x7, x5, x6
+b3a36200|	slt x7, x5, x6
+b3b36200|	sltu x7, x5, x6
+b3f36200|	and x7, x5, x6
+b3e36200|	or x7, x5, x6
+b3c36200|	xor x7, x5, x6
+17050000|	auipc x10, 0
+97050000|	auipc x11, 0
+17150000|	auipc x10, 1
+97070080|	auipc x15, -524288
+17f5ff7f|	auipc x10, 524287
