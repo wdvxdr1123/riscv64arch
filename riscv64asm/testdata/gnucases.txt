@@ -16,7 +16,89 @@ b3f36200|	and x7, x5, x6
 b3e36200|	or x7, x5, x6
 b3c36200|	xor x7, x5, x6
 17050000|	auipc x10, 0
-97050000|	auipc x11, 0
-17150000|	auipc x10, 1
 97070080|	auipc x15, -524288
 17f5ff7f|	auipc x10, 524287
+b7770a00|	lui x15, 167
+b7070080|	lui x15, -524288
+b3936200|	sll x7, x5, x6
+b3d36200|	srl x7, x5, x6
+b3d36240|	sra x7, x5, x6
+b3836240|	sub x7, x5, x6
+ef028000|	jal x5, 8
+67830200|	jalr x6, (x5)
+67834200|	jalr x6, 4(x5)
+63846200|	beq x5, x6, 8
+63946200|	bne x5, x6, 8
+63c46200|	blt x5, x6, 8
+63e46200|	bltu x5, x6, 8
+63d46200|	bge x5, x6, 8
+63f46200|	bgeu x5, x6, 8
+03a30200|	lw x6, (x5)
+03a34200|	lw x6, 4(x5)
+03e30200|	lwu x6, (x5)
+03e34200|	lwu x6, 4(x5)
+03930200|	lh x6, (x5)
+03934200|	lh x6, 4(x5)
+03d30200|	lhu x6, (x5)
+03d34200|	lhu x6, 4(x5)
+03830200|	lb x6, (x5)
+03834200|	lb x6, 4(x5)
+03c30200|	lbu x6, (x5)
+03c34200|	lbu x6, 4(x5)
+23205300|	sw x6, (x5)
+23225300|	sw x6, 4(x5)
+23105300|	sh x6, (x5)
+23125300|	sh x6, 4(x5)
+23005300|	sb x6, (x5)
+23025300|	sb x6, 4(x5)
+0f00f00f|	fence orw, iorw
+1b831200|	addiw x6, x5, 1
+1b931200|	slliw x6, x5, 1
+1bd31200|	srliw x6, x5, 1
+1bd31240|	sraiw x6, x5, 1
+bb035300|	addw x7, x6, x5
+bb135300|	sllw x7, x6, x5
+bb535300|	srlw x7, x6, x5
+bb535340|	sraw x7, x6, x5
+bb035340|	subw x7, x6, x5
+03b30200|	ld x6, (x5)
+03b34200|	ld x6, 4(x5)
+23305300|	sd x6, (x5)
+23325300|	sd x6, 4(x5)
+b3035302|	mul x7, x6, x5
+b3135302|	mulh x7, x6, x5
+b3335302|	mulhu x7, x6, x5
+b3235302|	mulhsu x7, x6, x5
+bb035302|	mulw x7, x6, x5
+b3435302|	div x7, x6, x5
+b3535302|	divu x7, x6, x5
+b3635302|	rem x7, x6, x5
+b3735302|	remu x7, x6, x5
+bb435302|	divw x7, x6, x5
+bb535302|	divuw x7, x6, x5
+bb635302|	remw x7, x6, x5
+bb735302|	remuw x7, x6, x5
+2fa30214|	lr.w.aq x6, (x5)
+2fb30214|	lr.d.aq x6, (x5)
+af23531c|	sc.w.aq x7, x5, (x6)
+af33531c|	sc.d.aq x7, x5, (x6)
+af23530c|	amoswap.w.aq x7, x5, (x6)
+af33530c|	amoswap.d.aq x7, x5, (x6)
+af235304|	amoadd.w.aq x7, x5, (x6)
+af335304|	amoadd.d.aq x7, x5, (x6)
+af235364|	amoand.w.aq x7, x5, (x6)
+af335364|	amoand.d.aq x7, x5, (x6)
+af235344|	amoor.w.aq x7, x5, (x6)
+af335344|	amoor.d.aq x7, x5, (x6)
+af235324|	amoxor.w.aq x7, x5, (x6)
+af335324|	amoxor.d.aq x7, x5, (x6)
+af2353a4|	amomax.w.aq x7, x5, (x6)
+af3353a4|	amomax.d.aq x7, x5, (x6)
+af2353e4|	amomaxu.w.aq x7, x5, (x6)
+af3353e4|	amomaxu.d.aq x7, x5, (x6)
+af235384|	amomin.w.aq x7, x5, (x6)
+af335384|	amomin.d.aq x7, x5, (x6)
+af2353c4|	amominu.w.aq x7, x5, (x6)
+af3353c4|	amominu.d.aq x7, x5, (x6)
+73000000|	ecall
+73001000|	ebreak

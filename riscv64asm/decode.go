@@ -64,6 +64,7 @@ Search:
 			Args: args,
 			Enc:  x,
 		}
+		transformInst(&inst)
 		return inst, nil
 	}
 	return Inst{}, errUnknown
@@ -121,13 +122,31 @@ func decodeArg(aop instArg, x uint32) Arg {
 		imm := int32(x>>20) & (1<<5 - 1)
 		return Imm(imm)
 	case arg_pred:
-		todo()
+		imm := int32(x>>25) & (1<<4 - 1)
+		return FenceField(imm)
 	case arg_succ:
-		todo()
+		imm := int32(x>>20) & (1<<4 - 1)
+		return FenceField(imm)
 	}
 	return nil
 }
 
-func todo() {
-	panic("todo!")
+func transformInst(i *Inst) {
+	if isAMO(i.Op) {
+		switch i.Op {
+		case LRD, LRW:
+			// lr.d rd, (rs1)
+			i.Args[1] = Mem{Base: i.Args[1].(Reg)}
+		default:
+			// op rd, rs2, (rs1)
+			i.Args[1], i.Args[2] = i.Args[2], Mem{Base: i.Args[1].(Reg)}
+		}
+	}
+	switch i.Op {
+	case JALR, LD, LW, LWU, LH, LHU, LB, LBU, SD, SW, SH, SB:
+		base := i.Args[1].(Reg)
+		offset := i.Args[2].(Imm)
+		i.Args[1] = Mem{Base: base, Offset: int32(offset)}
+		i.Args[2] = nil
+	}
 }

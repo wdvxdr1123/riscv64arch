@@ -21,3 +21,8 @@ const (
 	arg_shamtw
 	arg_succ
 )
+
+const (
+	aq = 1 << 26
+	rl = 1 << 25
+)

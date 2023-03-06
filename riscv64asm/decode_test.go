@@ -69,6 +69,7 @@ func testDecode(t *testing.T, syntax string) {
 			cover++
 		}
 	}
+	t.Logf("coverage: %.2f%%\n", 100*float64(cover)/float64(len(decoderCover)))
 }
 
 func TestDecodeGNUSyntax(t *testing.T) {

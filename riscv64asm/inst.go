@@ -6,6 +6,7 @@ package riscv64asm
 
 import (
 	"fmt"
+	"strconv"
 	"strings"
 )
 
@@ -34,7 +35,16 @@ func (i Inst) String() string {
 		}
 		args = append(args, arg.String())
 	}
-	return i.Op.String() + " " + strings.Join(args, ", ")
+	op := i.Op.String()
+	if isAMO(i.Op) {
+		if i.Enc&aq == aq {
+			op += ".AQ"
+		}
+		if i.Enc&rl == rl {
+			op += ".RL"
+		}
+	}
+	return op + " " + strings.Join(args, ", ")
 }
 
 // An Args holds the instruction arguments.
@@ -140,4 +150,61 @@ func (Imm) isArg() {}
 
 func (i Imm) String() string {
 	return fmt.Sprintf("%d", int32(i))
+}
+
+// Mem is a memory reference.
+// The effective memory address is Base + Offset.
+type Mem struct {
+	Base   Reg
+	Offset int32
+}
+
+func (Mem) isArg() {}
+
+func (m Mem) String() string {
+	base := "(" + m.Base.String() + ")"
+	if m.Offset != 0 {
+		return strconv.Itoa(int(m.Offset)) + base
+	}
+	return base
+}
+
+type FenceField uint8
+
+func (FenceField) isArg() {}
+
+func (f FenceField) String() string {
+	const (
+		i = 1 << (3 - iota)
+		o
+		r
+		w
+	)
+	var s string
+	if f&i == i {
+		s += "i"
+	}
+	if f&o == o {
+		s += "o"
+	}
+	if f&r == r {
+		s += "r"
+	}
+	if f&w == w {
+		s += "w"
+	}
+	return s
+}
+
+func isAMO(op Op) bool {
+	switch op {
+	case LRW, LRD, SCW, SCD,
+		AMOADDD, AMOADDW, AMOANDD, AMOANDW,
+		AMOMAXD, AMOMAXW, AMOMAXUD, AMOMAXUW,
+		AMOMIND, AMOMINW, AMOMINUD, AMOMINUW,
+		AMOORD, AMOORW, AMOSWAPD, AMOSWAPW,
+		AMOXORD, AMOXORW:
+		return true
+	}
+	return false
 }
