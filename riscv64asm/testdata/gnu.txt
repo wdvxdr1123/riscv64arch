@@ -108,4 +108,65 @@ af3353c4|	amominu.d.aq t2, t0, (t1)
 07a04200|	flw ft0, 4(t0)
 27a00200|	fsw ft0, (t0)
 27a20200|	fsw ft0, 4(t0)
+53011000|	fadd.s ft2, ft0, ft1, rne
+53011008|	fsub.s ft2, ft0, ft1, rne
+53011010|	fmul.s ft2, ft0, ft1, rne
+53011018|	fdiv.s ft2, ft0, ft1, rne
+53011028|	fmin.s ft2, ft0, ft1
+53111028|	fmax.s ft2, ft0, ft1
 d3000058|	fsqrt.s ft1, ft0, rne
+d31200c0|	fcvt.w.s ft5, ft0, rtz
+d31220c0|	fcvt.l.s ft5, ft0, rtz
+538002d0|	fcvt.s.w ft0, ft5, rne
+538022d0|	fcvt.s.l ft0, ft5, rne
+d31210c0|	fcvt.wu.s ft5, ft0, rtz
+d31230c0|	fcvt.lu.s ft5, ft0, rtz
+538012d0|	fcvt.s.wu ft0, ft5, rne
+538032d0|	fcvt.s.lu ft0, ft5, rne
+53011020|	fsgnj.s ft2, ft0, ft1
+53111020|	fsgnjn.s ft2, ft0, ft1
+53211020|	fsgnjx.s ft2, ft0, ft1
+d30200e0|	fmv.x.w ft5, ft0
+538002f0|	fmv.w.x ft0, ft5
+43822018|	fmadd.s ft4, ft1, ft2, ft3, rne
+47822018|	fmsub.s ft4, ft1, ft2, ft3, rne
+4f822018|	fnmadd.s ft4, ft1, ft2, ft3, rne
+4b822018|	fnmsub.s ft4, ft1, ft2, ft3, rne
+d3a300a0|	feq.s t2, ft1, ft0
+d39300a0|	flt.s t2, ft1, ft0
+d38300a0|	fle.s t2, ft1, ft0
+d31200e0|	fclass.s t0, ft0
+d31200e2|	fclass.d t0, ft0
+07b00200|	fld ft0, (t0)
+07b04200|	fld ft0, 4(t0)
+27b00200|	fsd ft0, (t0)
+27b20200|	fsd ft0, 4(t0)
+53011002|	fadd.d ft2, ft0, ft1, rne
+5301100a|	fsub.d ft2, ft0, ft1, rne
+53011012|	fmul.d ft2, ft0, ft1, rne
+5301101a|	fdiv.d ft2, ft0, ft1, rne
+5301102a|	fmin.d ft2, ft0, ft1
+5311102a|	fmax.d ft2, ft0, ft1
+d300005a|	fsqrt.d ft1, ft0, rne
+d31200c2|	fcvt.w.d ft5, ft0, rtz
+d31220c2|	fcvt.l.d ft5, ft0, rtz
+538002d2|	fcvt.d.w ft0, ft5, rne
+538022d2|	fcvt.d.l ft0, ft5, rne
+d31210c2|	fcvt.wu.d ft5, ft0, rtz
+d31230c2|	fcvt.lu.d ft5, ft0, rtz
+538012d2|	fcvt.d.wu ft0, ft5, rne
+538032d2|	fcvt.d.lu ft0, ft5, rne
+d3001040|	fcvt.s.d ft1, ft0, rne
+d3000042|	fcvt.d.s ft1, ft0, rne
+53011022|	fsgnj.d ft2, ft0, ft1
+53111022|	fsgnjn.d ft2, ft0, ft1
+53211022|	fsgnjx.d ft2, ft0, ft1
+d30200e2|	fmv.x.d ft5, ft0
+538002f2|	fmv.d.x ft0, ft5
+4382201a|	fmadd.d ft4, ft1, ft2, ft3, rne
+4782201a|	fmsub.d ft4, ft1, ft2, ft3, rne
+4f82201a|	fnmadd.d ft4, ft1, ft2, ft3, rne
+4b82201a|	fnmsub.d ft4, ft1, ft2, ft3, rne
+d39200a2|	flt.d t0, ft1, ft0
+d38200a2|	fle.d t0, ft1, ft0
+d3a200a2|	feq.d t0, ft1, ft0

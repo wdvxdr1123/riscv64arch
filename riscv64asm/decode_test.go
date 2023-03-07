@@ -65,13 +65,6 @@ func testDecode(t *testing.T, syntax string) {
 			t.Errorf("Decode(%s) [%s] = %s, want %s", strings.Trim(f[0], "|"), syntax, out, asm)
 		}
 	}
-	cover := 0
-	for _, b := range decoderCover {
-		if b {
-			cover++
-		}
-	}
-	t.Logf("coverage: %.2f%%\n", 100*float64(cover)/float64(len(decoderCover)))
 }
 
 func TestDecodeGNUSyntax(t *testing.T) {

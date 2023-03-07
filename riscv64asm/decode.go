@@ -159,6 +159,11 @@ func transformInst(i *Inst) {
 			i.Args[2] = nil
 		case FLD, FLW:
 			i.Args[0] = i.Args[0].(Reg) - X0 + F0
+		case FCLASSS, FCLASSD:
+			i.Args[1] = i.Args[1].(Reg) - X0 + F0
+		case FEQS, FLTS, FLES, FEQD, FLTD, FLED:
+			i.Args[1] = i.Args[1].(Reg) - X0 + F0
+			i.Args[2] = i.Args[2].(Reg) - X0 + F0
 		default:
 			for index, arg := range i.Args {
 				if gp, ok := arg.(Reg); ok {
