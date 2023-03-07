@@ -35,16 +35,7 @@ func (i Inst) String() string {
 		}
 		args = append(args, arg.String())
 	}
-	op := i.Op.String()
-	if isAMO(i.Op) {
-		if i.Enc&aq == aq {
-			op += ".AQ"
-		}
-		if i.Enc&rl == rl {
-			op += ".RL"
-		}
-	}
-	return op + " " + strings.Join(args, ", ")
+	return i.Op.String() + " " + strings.Join(args, ", ")
 }
 
 // An Args holds the instruction arguments.
@@ -128,16 +119,47 @@ const (
 	F29
 	F30
 	F31
+
+	ZERO = X0
+	RA   = X1
 )
 
 func (Reg) isArg() {}
 
 func (r Reg) String() string {
 	switch {
-	case r <= X31:
-		return fmt.Sprintf("X%d", int(r-X0))
-	case F0 <= r && r <= F31:
-		return fmt.Sprintf("F%d", int(r-F0))
+	case r == X0:
+		return "zero"
+	case r == X1:
+		return "ra"
+	case r == X2:
+		return "sp"
+	case r == X3:
+		return "gp"
+	case r == X4:
+		return "tp"
+	case X5 <= r && r <= X7:
+		return fmt.Sprintf("t%d", int(r-X5))
+	case r == X8 || r == X9:
+		return fmt.Sprintf("s%d", int(r-X8))
+	case X10 <= r && r <= X17:
+		return fmt.Sprintf("a%d", int(r-X10))
+	case X18 <= r && r <= X27:
+		return fmt.Sprintf("s%d", int(r-X18+2))
+	case X28 <= r && r <= X31:
+		return fmt.Sprintf("t%d", int(r-X28+3))
+
+	case F0 <= r && r <= F7:
+		return fmt.Sprintf("ft%d", int(r-F0))
+	case r == F8 || r == F9:
+		return fmt.Sprintf("fs%d", int(r-F8))
+	case F10 <= r && r <= F17:
+		return fmt.Sprintf("fa%d", int(r-F10))
+	case F18 <= r && r <= F27:
+		return fmt.Sprintf("fs%d", int(r-F18+2))
+	case F28 <= r && r <= F31:
+		return fmt.Sprintf("ft%d", int(r-F28+8))
+
 	default:
 		return fmt.Sprintf("Reg(%d)", int(r))
 	}
@@ -196,6 +218,28 @@ func (f FenceField) String() string {
 	return s
 }
 
+type RoundingMode uint8
+
+func (RoundingMode) isArg() {}
+
+func (r RoundingMode) String() string {
+	switch r {
+	case 0b000:
+		return "rne"
+	case 0b001:
+		return "rtz"
+	case 0b010:
+		return "rdn"
+	case 0b011:
+		return "rup"
+	case 0b100:
+		return "rmm"
+	case 0b111:
+		return "dyn"
+	}
+	return "Invalid"
+}
+
 func isAMO(op Op) bool {
 	switch op {
 	case LRW, LRD, SCW, SCD,
@@ -204,6 +248,23 @@ func isAMO(op Op) bool {
 		AMOMIND, AMOMINW, AMOMINUD, AMOMINUW,
 		AMOORD, AMOORW, AMOSWAPD, AMOSWAPW,
 		AMOXORD, AMOXORW:
+		return true
+	}
+	return false
+}
+
+func isFloatOp(op Op) bool {
+	switch op {
+	case FADDD, FADDS, FCLASSD, FCLASSS, FCVTDL, FCVTDLU,
+		FCVTDS, FCVTDW, FCVTDWU, FCVTLD, FCVTLS, FCVTLUD,
+		FCVTLUS, FCVTSD, FCVTSL, FCVTSLU, FCVTSW, FCVTSWU,
+		FCVTWD, FCVTWS, FCVTWUD, FCVTWUS, FDIVD, FDIVS,
+		FEQD, FEQS, FLD, FLED, FLES, FLTD, FLTS, FLW,
+		FMADDD, FMADDS, FMAXD, FMAXS, FMIND, FMINS,
+		FMSUBD, FMSUBS, FMULD, FMULS, FMVDX, FMVWX,
+		FMVXD, FMVXW, FNMADDD, FNMADDS, FNMSUBD, FNMSUBS,
+		FSD, FSGNJD, FSGNJS, FSGNJND, FSGNJNS, FSGNJXD,
+		FSGNJXS, FSQRTD, FSQRTS, FSUBD, FSUBS, FSW:
 		return true
 	}
 	return false

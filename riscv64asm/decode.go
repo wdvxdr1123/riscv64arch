@@ -98,7 +98,7 @@ func decodeArg(aop instArg, x uint32) Arg {
 		// imm[20] | imm[10:1] | imm[11] | imm[19:12] | ...
 		imm := (int32(x>>31) & (1<<1 - 1)) << 20
 		imm |= (int32(x>>21) & (1<<10 - 1)) << 1
-		imm |= (int32(x>>21) & (1<<1 - 1)) << 11
+		imm |= (int32(x>>20) & (1<<1 - 1)) << 11
 		imm |= (int32(x>>12) & (1<<8 - 1)) << 12
 		return Imm(signExtend(imm, 21))
 	case arg_imm12hilo:
@@ -121,32 +121,55 @@ func decodeArg(aop instArg, x uint32) Arg {
 	case arg_shamtw:
 		imm := int32(x>>20) & (1<<5 - 1)
 		return Imm(imm)
-	case arg_pred:
-		imm := int32(x>>25) & (1<<4 - 1)
-		return FenceField(imm)
-	case arg_succ:
-		imm := int32(x>>20) & (1<<4 - 1)
-		return FenceField(imm)
+	case arg_rs3:
+		return X0 + Reg((x>>27)&(1<<5-1))
+	case arg_rm:
+		return RoundingMode((x >> 12) & (1<<3 - 1))
 	}
 	return nil
 }
 
+func mem(base Arg, offset Arg) Arg {
+	if offset == nil {
+		return Mem{Base: base.(Reg)}
+	}
+	return Mem{Base: base.(Reg), Offset: int32(offset.(Imm))}
+}
+
 func transformInst(i *Inst) {
-	if isAMO(i.Op) {
-		switch i.Op {
+	op := i.Op
+	if isAMO(op) {
+		switch op {
 		case LRD, LRW:
 			// lr.d rd, (rs1)
-			i.Args[1] = Mem{Base: i.Args[1].(Reg)}
+			i.Args[1] = mem(i.Args[1], nil)
 		default:
 			// op rd, rs2, (rs1)
-			i.Args[1], i.Args[2] = i.Args[2], Mem{Base: i.Args[1].(Reg)}
+			i.Args[1], i.Args[2] = i.Args[2], mem(i.Args[1], nil)
+		}
+	}
+	if isFloatOp(op) {
+		switch op {
+		case FSD, FSW:
+			// fsd rs2, offset(rs1)
+			rs1 := i.Args[0]
+			offset := i.Args[2]
+			i.Args[0] = i.Args[1].(Reg) - X0 + F0
+			i.Args[1] = mem(rs1, offset)
+			i.Args[2] = nil
+		case FLD, FLW:
+			i.Args[0] = i.Args[0].(Reg) - X0 + F0
+		default:
+			for index, arg := range i.Args {
+				if gp, ok := arg.(Reg); ok {
+					i.Args[index] = gp - X0 + F0
+				}
+			}
 		}
 	}
 	switch i.Op {
-	case JALR, LD, LW, LWU, LH, LHU, LB, LBU, SD, SW, SH, SB:
-		base := i.Args[1].(Reg)
-		offset := i.Args[2].(Imm)
-		i.Args[1] = Mem{Base: base, Offset: int32(offset)}
+	case JALR, LD, LW, LWU, LH, LHU, LB, LBU, SD, SW, SH, SB, FLW, FLD:
+		i.Args[1] = mem(i.Args[1], i.Args[2])
 		i.Args[2] = nil
 	}
 }

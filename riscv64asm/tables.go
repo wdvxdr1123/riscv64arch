@@ -45,7 +45,69 @@ const (
 	DIVW
 	EBREAK
 	ECALL
+	FADDD
+	FADDS
+	FCLASSD
+	FCLASSS
+	FCVTDL
+	FCVTDLU
+	FCVTDS
+	FCVTDW
+	FCVTDWU
+	FCVTLD
+	FCVTLS
+	FCVTLUD
+	FCVTLUS
+	FCVTSD
+	FCVTSL
+	FCVTSLU
+	FCVTSW
+	FCVTSWU
+	FCVTWD
+	FCVTWS
+	FCVTWUD
+	FCVTWUS
+	FDIVD
+	FDIVS
 	FENCE
+	FEQD
+	FEQS
+	FLD
+	FLED
+	FLES
+	FLTD
+	FLTS
+	FLW
+	FMADDD
+	FMADDS
+	FMAXD
+	FMAXS
+	FMIND
+	FMINS
+	FMSUBD
+	FMSUBS
+	FMULD
+	FMULS
+	FMVDX
+	FMVWX
+	FMVXD
+	FMVXW
+	FNMADDD
+	FNMADDS
+	FNMSUBD
+	FNMSUBS
+	FSD
+	FSGNJD
+	FSGNJS
+	FSGNJND
+	FSGNJNS
+	FSGNJXD
+	FSGNJXS
+	FSQRTD
+	FSQRTS
+	FSUBD
+	FSUBS
+	FSW
 	JAL
 	JALR
 	LB
@@ -98,93 +160,155 @@ const (
 )
 
 var opstr = [...]string{
-	ADD:      "ADD",
-	ADDI:     "ADDI",
-	ADDIW:    "ADDIW",
-	ADDW:     "ADDW",
-	AMOADDD:  "AMOADD.D",
-	AMOADDW:  "AMOADD.W",
-	AMOANDD:  "AMOAND.D",
-	AMOANDW:  "AMOAND.W",
-	AMOMAXD:  "AMOMAX.D",
-	AMOMAXW:  "AMOMAX.W",
-	AMOMAXUD: "AMOMAXU.D",
-	AMOMAXUW: "AMOMAXU.W",
-	AMOMIND:  "AMOMIN.D",
-	AMOMINW:  "AMOMIN.W",
-	AMOMINUD: "AMOMINU.D",
-	AMOMINUW: "AMOMINU.W",
-	AMOORD:   "AMOOR.D",
-	AMOORW:   "AMOOR.W",
-	AMOSWAPD: "AMOSWAP.D",
-	AMOSWAPW: "AMOSWAP.W",
-	AMOXORD:  "AMOXOR.D",
-	AMOXORW:  "AMOXOR.W",
-	AND:      "AND",
-	ANDI:     "ANDI",
-	AUIPC:    "AUIPC",
-	BEQ:      "BEQ",
-	BGE:      "BGE",
-	BGEU:     "BGEU",
-	BLT:      "BLT",
-	BLTU:     "BLTU",
-	BNE:      "BNE",
-	DIV:      "DIV",
-	DIVU:     "DIVU",
-	DIVUW:    "DIVUW",
-	DIVW:     "DIVW",
-	EBREAK:   "EBREAK",
-	ECALL:    "ECALL",
-	FENCE:    "FENCE",
-	JAL:      "JAL",
-	JALR:     "JALR",
-	LB:       "LB",
-	LBU:      "LBU",
-	LD:       "LD",
-	LH:       "LH",
-	LHU:      "LHU",
-	LRD:      "LR.D",
-	LRW:      "LR.W",
-	LUI:      "LUI",
-	LW:       "LW",
-	LWU:      "LWU",
-	MUL:      "MUL",
-	MULH:     "MULH",
-	MULHSU:   "MULHSU",
-	MULHU:    "MULHU",
-	MULW:     "MULW",
-	OR:       "OR",
-	ORI:      "ORI",
-	REM:      "REM",
-	REMU:     "REMU",
-	REMUW:    "REMUW",
-	REMW:     "REMW",
-	SB:       "SB",
-	SCD:      "SC.D",
-	SCW:      "SC.W",
-	SD:       "SD",
-	SH:       "SH",
-	SLL:      "SLL",
-	SLLI:     "SLLI",
-	SLLIW:    "SLLIW",
-	SLLW:     "SLLW",
-	SLT:      "SLT",
-	SLTI:     "SLTI",
-	SLTIU:    "SLTIU",
-	SLTU:     "SLTU",
-	SRA:      "SRA",
-	SRAI:     "SRAI",
-	SRAIW:    "SRAIW",
-	SRAW:     "SRAW",
-	SRL:      "SRL",
-	SRLI:     "SRLI",
-	SRLIW:    "SRLIW",
-	SRLW:     "SRLW",
-	SUB:      "SUB",
-	SUBW:     "SUBW",
-	SW:       "SW",
-	XOR:      "XOR",
-	XORI:     "XORI",
+	ADD:      "add",
+	ADDI:     "addi",
+	ADDIW:    "addiw",
+	ADDW:     "addw",
+	AMOADDD:  "amoadd.d",
+	AMOADDW:  "amoadd.w",
+	AMOANDD:  "amoand.d",
+	AMOANDW:  "amoand.w",
+	AMOMAXD:  "amomax.d",
+	AMOMAXW:  "amomax.w",
+	AMOMAXUD: "amomaxu.d",
+	AMOMAXUW: "amomaxu.w",
+	AMOMIND:  "amomin.d",
+	AMOMINW:  "amomin.w",
+	AMOMINUD: "amominu.d",
+	AMOMINUW: "amominu.w",
+	AMOORD:   "amoor.d",
+	AMOORW:   "amoor.w",
+	AMOSWAPD: "amoswap.d",
+	AMOSWAPW: "amoswap.w",
+	AMOXORD:  "amoxor.d",
+	AMOXORW:  "amoxor.w",
+	AND:      "and",
+	ANDI:     "andi",
+	AUIPC:    "auipc",
+	BEQ:      "beq",
+	BGE:      "bge",
+	BGEU:     "bgeu",
+	BLT:      "blt",
+	BLTU:     "bltu",
+	BNE:      "bne",
+	DIV:      "div",
+	DIVU:     "divu",
+	DIVUW:    "divuw",
+	DIVW:     "divw",
+	EBREAK:   "ebreak",
+	ECALL:    "ecall",
+	FADDD:    "fadd.d",
+	FADDS:    "fadd.s",
+	FCLASSD:  "fclass.d",
+	FCLASSS:  "fclass.s",
+	FCVTDL:   "fcvt.d.l",
+	FCVTDLU:  "fcvt.d.lu",
+	FCVTDS:   "fcvt.d.s",
+	FCVTDW:   "fcvt.d.w",
+	FCVTDWU:  "fcvt.d.wu",
+	FCVTLD:   "fcvt.l.d",
+	FCVTLS:   "fcvt.l.s",
+	FCVTLUD:  "fcvt.lu.d",
+	FCVTLUS:  "fcvt.lu.s",
+	FCVTSD:   "fcvt.s.d",
+	FCVTSL:   "fcvt.s.l",
+	FCVTSLU:  "fcvt.s.lu",
+	FCVTSW:   "fcvt.s.w",
+	FCVTSWU:  "fcvt.s.wu",
+	FCVTWD:   "fcvt.w.d",
+	FCVTWS:   "fcvt.w.s",
+	FCVTWUD:  "fcvt.wu.d",
+	FCVTWUS:  "fcvt.wu.s",
+	FDIVD:    "fdiv.d",
+	FDIVS:    "fdiv.s",
+	FENCE:    "fence",
+	FEQD:     "feq.d",
+	FEQS:     "feq.s",
+	FLD:      "fld",
+	FLED:     "fle.d",
+	FLES:     "fle.s",
+	FLTD:     "flt.d",
+	FLTS:     "flt.s",
+	FLW:      "flw",
+	FMADDD:   "fmadd.d",
+	FMADDS:   "fmadd.s",
+	FMAXD:    "fmax.d",
+	FMAXS:    "fmax.s",
+	FMIND:    "fmin.d",
+	FMINS:    "fmin.s",
+	FMSUBD:   "fmsub.d",
+	FMSUBS:   "fmsub.s",
+	FMULD:    "fmul.d",
+	FMULS:    "fmul.s",
+	FMVDX:    "fmv.d.x",
+	FMVWX:    "fmv.w.x",
+	FMVXD:    "fmv.x.d",
+	FMVXW:    "fmv.x.w",
+	FNMADDD:  "fnmadd.d",
+	FNMADDS:  "fnmadd.s",
+	FNMSUBD:  "fnmsub.d",
+	FNMSUBS:  "fnmsub.s",
+	FSD:      "fsd",
+	FSGNJD:   "fsgnj.d",
+	FSGNJS:   "fsgnj.s",
+	FSGNJND:  "fsgnjn.d",
+	FSGNJNS:  "fsgnjn.s",
+	FSGNJXD:  "fsgnjx.d",
+	FSGNJXS:  "fsgnjx.s",
+	FSQRTD:   "fsqrt.d",
+	FSQRTS:   "fsqrt.s",
+	FSUBD:    "fsub.d",
+	FSUBS:    "fsub.s",
+	FSW:      "fsw",
+	JAL:      "jal",
+	JALR:     "jalr",
+	LB:       "lb",
+	LBU:      "lbu",
+	LD:       "ld",
+	LH:       "lh",
+	LHU:      "lhu",
+	LRD:      "lr.d",
+	LRW:      "lr.w",
+	LUI:      "lui",
+	LW:       "lw",
+	LWU:      "lwu",
+	MUL:      "mul",
+	MULH:     "mulh",
+	MULHSU:   "mulhsu",
+	MULHU:    "mulhu",
+	MULW:     "mulw",
+	OR:       "or",
+	ORI:      "ori",
+	REM:      "rem",
+	REMU:     "remu",
+	REMUW:    "remuw",
+	REMW:     "remw",
+	SB:       "sb",
+	SCD:      "sc.d",
+	SCW:      "sc.w",
+	SD:       "sd",
+	SH:       "sh",
+	SLL:      "sll",
+	SLLI:     "slli",
+	SLLIW:    "slliw",
+	SLLW:     "sllw",
+	SLT:      "slt",
+	SLTI:     "slti",
+	SLTIU:    "sltiu",
+	SLTU:     "sltu",
+	SRA:      "sra",
+	SRAI:     "srai",
+	SRAIW:    "sraiw",
+	SRAW:     "sraw",
+	SRL:      "srl",
+	SRLI:     "srli",
+	SRLIW:    "srliw",
+	SRLW:     "srlw",
+	SUB:      "sub",
+	SUBW:     "subw",
+	SW:       "sw",
+	XOR:      "xor",
+	XORI:     "xori",
 }
 
 var instFormats = [...]instFormat{
@@ -225,7 +349,69 @@ var instFormats = [...]instFormat{
 	{DIVW, 0xfe00707f, 0x200403b, instArgs{arg_rd, arg_rs1, arg_rs2}},
 	{EBREAK, 0xffffffff, 0x100073, instArgs{}},
 	{ECALL, 0xffffffff, 0x73, instArgs{}},
-	{FENCE, 0x707f, 0xf, instArgs{arg_pred, arg_succ}},
+	{FADDD, 0xfe00007f, 0x2000053, instArgs{arg_rd, arg_rs1, arg_rs2, arg_rm}},
+	{FADDS, 0xfe00007f, 0x53, instArgs{arg_rd, arg_rs1, arg_rs2, arg_rm}},
+	{FCLASSD, 0xfff0707f, 0xe2001053, instArgs{arg_rd, arg_rs1}},
+	{FCLASSS, 0xfff0707f, 0xe0001053, instArgs{arg_rd, arg_rs1}},
+	{FCVTDL, 0xfff0007f, 0xd2200053, instArgs{arg_rd, arg_rs1, arg_rm}},
+	{FCVTDLU, 0xfff0007f, 0xd2300053, instArgs{arg_rd, arg_rs1, arg_rm}},
+	{FCVTDS, 0xfff0007f, 0x42000053, instArgs{arg_rd, arg_rs1, arg_rm}},
+	{FCVTDW, 0xfff0007f, 0xd2000053, instArgs{arg_rd, arg_rs1, arg_rm}},
+	{FCVTDWU, 0xfff0007f, 0xd2100053, instArgs{arg_rd, arg_rs1, arg_rm}},
+	{FCVTLD, 0xfff0007f, 0xc2200053, instArgs{arg_rd, arg_rs1, arg_rm}},
+	{FCVTLS, 0xfff0007f, 0xc0200053, instArgs{arg_rd, arg_rs1, arg_rm}},
+	{FCVTLUD, 0xfff0007f, 0xc2300053, instArgs{arg_rd, arg_rs1, arg_rm}},
+	{FCVTLUS, 0xfff0007f, 0xc0300053, instArgs{arg_rd, arg_rs1, arg_rm}},
+	{FCVTSD, 0xfff0007f, 0x40100053, instArgs{arg_rd, arg_rs1, arg_rm}},
+	{FCVTSL, 0xfff0007f, 0xd0200053, instArgs{arg_rd, arg_rs1, arg_rm}},
+	{FCVTSLU, 0xfff0007f, 0xd0300053, instArgs{arg_rd, arg_rs1, arg_rm}},
+	{FCVTSW, 0xfff0007f, 0xd0000053, instArgs{arg_rd, arg_rs1, arg_rm}},
+	{FCVTSWU, 0xfff0007f, 0xd0100053, instArgs{arg_rd, arg_rs1, arg_rm}},
+	{FCVTWD, 0xfff0007f, 0xc2000053, instArgs{arg_rd, arg_rs1, arg_rm}},
+	{FCVTWS, 0xfff0007f, 0xc0000053, instArgs{arg_rd, arg_rs1, arg_rm}},
+	{FCVTWUD, 0xfff0007f, 0xc2100053, instArgs{arg_rd, arg_rs1, arg_rm}},
+	{FCVTWUS, 0xfff0007f, 0xc0100053, instArgs{arg_rd, arg_rs1, arg_rm}},
+	{FDIVD, 0xfe00007f, 0x1a000053, instArgs{arg_rd, arg_rs1, arg_rs2, arg_rm}},
+	{FDIVS, 0xfe00007f, 0x18000053, instArgs{arg_rd, arg_rs1, arg_rs2, arg_rm}},
+	{FENCE, 0x707f, 0xf, instArgs{}},
+	{FEQD, 0xfe00707f, 0xa2002053, instArgs{arg_rd, arg_rs1, arg_rs2}},
+	{FEQS, 0xfe00707f, 0xa0002053, instArgs{arg_rd, arg_rs1, arg_rs2}},
+	{FLD, 0x707f, 0x3007, instArgs{arg_rd, arg_rs1, arg_imm12}},
+	{FLED, 0xfe00707f, 0xa2000053, instArgs{arg_rd, arg_rs1, arg_rs2}},
+	{FLES, 0xfe00707f, 0xa0000053, instArgs{arg_rd, arg_rs1, arg_rs2}},
+	{FLTD, 0xfe00707f, 0xa2001053, instArgs{arg_rd, arg_rs1, arg_rs2}},
+	{FLTS, 0xfe00707f, 0xa0001053, instArgs{arg_rd, arg_rs1, arg_rs2}},
+	{FLW, 0x707f, 0x2007, instArgs{arg_rd, arg_rs1, arg_imm12}},
+	{FMADDD, 0x600007f, 0x2000043, instArgs{arg_rd, arg_rs1, arg_rs2, arg_rs3, arg_rm}},
+	{FMADDS, 0x600007f, 0x43, instArgs{arg_rd, arg_rs1, arg_rs2, arg_rs3, arg_rm}},
+	{FMAXD, 0xfe00707f, 0x2a001053, instArgs{arg_rd, arg_rs1, arg_rs2}},
+	{FMAXS, 0xfe00707f, 0x28001053, instArgs{arg_rd, arg_rs1, arg_rs2}},
+	{FMIND, 0xfe00707f, 0x2a000053, instArgs{arg_rd, arg_rs1, arg_rs2}},
+	{FMINS, 0xfe00707f, 0x28000053, instArgs{arg_rd, arg_rs1, arg_rs2}},
+	{FMSUBD, 0x600007f, 0x2000047, instArgs{arg_rd, arg_rs1, arg_rs2, arg_rs3, arg_rm}},
+	{FMSUBS, 0x600007f, 0x47, instArgs{arg_rd, arg_rs1, arg_rs2, arg_rs3, arg_rm}},
+	{FMULD, 0xfe00007f, 0x12000053, instArgs{arg_rd, arg_rs1, arg_rs2, arg_rm}},
+	{FMULS, 0xfe00007f, 0x10000053, instArgs{arg_rd, arg_rs1, arg_rs2, arg_rm}},
+	{FMVDX, 0xfff0707f, 0xf2000053, instArgs{arg_rd, arg_rs1}},
+	{FMVWX, 0xfff0707f, 0xf0000053, instArgs{arg_rd, arg_rs1}},
+	{FMVXD, 0xfff0707f, 0xe2000053, instArgs{arg_rd, arg_rs1}},
+	{FMVXW, 0xfff0707f, 0xe0000053, instArgs{arg_rd, arg_rs1}},
+	{FNMADDD, 0x600007f, 0x200004f, instArgs{arg_rd, arg_rs1, arg_rs2, arg_rs3, arg_rm}},
+	{FNMADDS, 0x600007f, 0x4f, instArgs{arg_rd, arg_rs1, arg_rs2, arg_rs3, arg_rm}},
+	{FNMSUBD, 0x600007f, 0x200004b, instArgs{arg_rd, arg_rs1, arg_rs2, arg_rs3, arg_rm}},
+	{FNMSUBS, 0x600007f, 0x4b, instArgs{arg_rd, arg_rs1, arg_rs2, arg_rs3, arg_rm}},
+	{FSD, 0x707f, 0x3027, instArgs{arg_rs1, arg_rs2, arg_imm12hilo}},
+	{FSGNJD, 0xfe00707f, 0x22000053, instArgs{arg_rd, arg_rs1, arg_rs2}},
+	{FSGNJS, 0xfe00707f, 0x20000053, instArgs{arg_rd, arg_rs1, arg_rs2}},
+	{FSGNJND, 0xfe00707f, 0x22001053, instArgs{arg_rd, arg_rs1, arg_rs2}},
+	{FSGNJNS, 0xfe00707f, 0x20001053, instArgs{arg_rd, arg_rs1, arg_rs2}},
+	{FSGNJXD, 0xfe00707f, 0x22002053, instArgs{arg_rd, arg_rs1, arg_rs2}},
+	{FSGNJXS, 0xfe00707f, 0x20002053, instArgs{arg_rd, arg_rs1, arg_rs2}},
+	{FSQRTD, 0xfff0007f, 0x5a000053, instArgs{arg_rd, arg_rs1, arg_rm}},
+	{FSQRTS, 0xfff0007f, 0x58000053, instArgs{arg_rd, arg_rs1, arg_rm}},
+	{FSUBD, 0xfe00007f, 0xa000053, instArgs{arg_rd, arg_rs1, arg_rs2, arg_rm}},
+	{FSUBS, 0xfe00007f, 0x8000053, instArgs{arg_rd, arg_rs1, arg_rs2, arg_rm}},
+	{FSW, 0x707f, 0x2027, instArgs{arg_rs1, arg_rs2, arg_imm12hilo}},
 	{JAL, 0x7f, 0x6f, instArgs{arg_rd, arg_jimm20}},
 	{JALR, 0x707f, 0x67, instArgs{arg_rd, arg_rs1, arg_imm12}},
 	{LB, 0x707f, 0x3, instArgs{arg_rd, arg_rs1, arg_imm12}},

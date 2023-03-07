@@ -13,13 +13,13 @@ const (
 	arg_imm12hilo
 	arg_imm20
 	arg_jimm20
-	arg_pred
 	arg_rd
+	arg_rm
 	arg_rs1
 	arg_rs2
+	arg_rs3
 	arg_shamtd
 	arg_shamtw
-	arg_succ
 )
 
 const (

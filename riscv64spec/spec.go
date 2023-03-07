@@ -30,12 +30,12 @@ func (i *Inst) GoName() string {
 }
 
 func (i *Inst) GNUName() string {
-	return strings.ToUpper(i.name)
+	return i.name
 }
 
 func (i *Inst) AddArg(arg string) {
 	switch arg {
-	case "aq", "rl", "imm12hi", "bimm12hi", "fm":
+	case "aq", "rl", "imm12hi", "bimm12hi", "fm", "pred", "succ":
 		return // ignore
 	case "imm12lo", "bimm12lo":
 		arg = strings.Replace(arg, "lo", "hilo", 1)
@@ -115,8 +115,8 @@ func fetch(ext string) (string, error) {
 func main() {
 	var g generator
 	exts := []string{
-		"rv_i", "rv_m", "rv_a", // "rv_f", "rv_d",
-		"rv64_i", "rv64_m", "rv64_a", // "rv64_f", "rv64_d",
+		"rv_i", "rv_m", "rv_a", "rv_f", "rv_d",
+		"rv64_i", "rv64_m", "rv64_a", "rv64_f", "rv64_d",
 	}
 	for _, ext := range exts {
 		g.addExtension(ext)

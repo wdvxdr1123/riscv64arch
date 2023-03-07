@@ -1,104 +1,126 @@
-9382f27f|	addi x5, x5, 2047
-93820280|	addi x5, x5, -2048
-13931200|	slli x6, x5, 1
-93a37203|	slti x7, x5, 55
-93b37203|	sltiu x7, x5, 55
-13f31200|	andi x6, x5, 1
-13e31200|	ori x6, x5, 1
-13c31200|	xori x6, x5, 1
-13931200|	slli x6, x5, 1
-13d31200|	srli x6, x5, 1
-13d31240|	srai x6, x5, 1
-b3836200|	add x7, x5, x6
-b3a36200|	slt x7, x5, x6
-b3b36200|	sltu x7, x5, x6
-b3f36200|	and x7, x5, x6
-b3e36200|	or x7, x5, x6
-b3c36200|	xor x7, x5, x6
-17050000|	auipc x10, 0
-97070080|	auipc x15, -524288
-17f5ff7f|	auipc x10, 524287
-b7770a00|	lui x15, 167
-b7070080|	lui x15, -524288
-b3936200|	sll x7, x5, x6
-b3d36200|	srl x7, x5, x6
-b3d36240|	sra x7, x5, x6
-b3836240|	sub x7, x5, x6
-ef028000|	jal x5, 8
-67830200|	jalr x6, (x5)
-67834200|	jalr x6, 4(x5)
-63846200|	beq x5, x6, 8
-63946200|	bne x5, x6, 8
-63c46200|	blt x5, x6, 8
-63e46200|	bltu x5, x6, 8
-63d46200|	bge x5, x6, 8
-63f46200|	bgeu x5, x6, 8
-03a30200|	lw x6, (x5)
-03a34200|	lw x6, 4(x5)
-03e30200|	lwu x6, (x5)
-03e34200|	lwu x6, 4(x5)
-03930200|	lh x6, (x5)
-03934200|	lh x6, 4(x5)
-03d30200|	lhu x6, (x5)
-03d34200|	lhu x6, 4(x5)
-03830200|	lb x6, (x5)
-03834200|	lb x6, 4(x5)
-03c30200|	lbu x6, (x5)
-03c34200|	lbu x6, 4(x5)
-23205300|	sw x6, (x5)
-23225300|	sw x6, 4(x5)
-23105300|	sh x6, (x5)
-23125300|	sh x6, 4(x5)
-23005300|	sb x6, (x5)
-23025300|	sb x6, 4(x5)
-0f00f00f|	fence orw, iorw
-1b831200|	addiw x6, x5, 1
-1b931200|	slliw x6, x5, 1
-1bd31200|	srliw x6, x5, 1
-1bd31240|	sraiw x6, x5, 1
-bb035300|	addw x7, x6, x5
-bb135300|	sllw x7, x6, x5
-bb535300|	srlw x7, x6, x5
-bb535340|	sraw x7, x6, x5
-bb035340|	subw x7, x6, x5
-03b30200|	ld x6, (x5)
-03b34200|	ld x6, 4(x5)
-23305300|	sd x6, (x5)
-23325300|	sd x6, 4(x5)
-b3035302|	mul x7, x6, x5
-b3135302|	mulh x7, x6, x5
-b3335302|	mulhu x7, x6, x5
-b3235302|	mulhsu x7, x6, x5
-bb035302|	mulw x7, x6, x5
-b3435302|	div x7, x6, x5
-b3535302|	divu x7, x6, x5
-b3635302|	rem x7, x6, x5
-b3735302|	remu x7, x6, x5
-bb435302|	divw x7, x6, x5
-bb535302|	divuw x7, x6, x5
-bb635302|	remw x7, x6, x5
-bb735302|	remuw x7, x6, x5
-2fa30214|	lr.w.aq x6, (x5)
-2fb30214|	lr.d.aq x6, (x5)
-af23531c|	sc.w.aq x7, x5, (x6)
-af33531c|	sc.d.aq x7, x5, (x6)
-af23530c|	amoswap.w.aq x7, x5, (x6)
-af33530c|	amoswap.d.aq x7, x5, (x6)
-af235304|	amoadd.w.aq x7, x5, (x6)
-af335304|	amoadd.d.aq x7, x5, (x6)
-af235364|	amoand.w.aq x7, x5, (x6)
-af335364|	amoand.d.aq x7, x5, (x6)
-af235344|	amoor.w.aq x7, x5, (x6)
-af335344|	amoor.d.aq x7, x5, (x6)
-af235324|	amoxor.w.aq x7, x5, (x6)
-af335324|	amoxor.d.aq x7, x5, (x6)
-af2353a4|	amomax.w.aq x7, x5, (x6)
-af3353a4|	amomax.d.aq x7, x5, (x6)
-af2353e4|	amomaxu.w.aq x7, x5, (x6)
-af3353e4|	amomaxu.d.aq x7, x5, (x6)
-af235384|	amomin.w.aq x7, x5, (x6)
-af335384|	amomin.d.aq x7, x5, (x6)
-af2353c4|	amominu.w.aq x7, x5, (x6)
-af3353c4|	amominu.d.aq x7, x5, (x6)
+9382f27f|	addi t0, t0, 2047
+93820280|	addi t0, t0, -2048
+13841200|	addi s0, t0, 1
+93052000|	li a1, 2
+13000000|	nop
+93820500|	mv t0, a1
+13931200|	slli t1, t0, 1
+93a37203|	slti t2, t0, 55
+93b37203|	sltiu t2, t0, 55
+93321500|	seqz t0, a0
+13f31200|	andi t1, t0, 1
+1374f40f|	zext.b s0, s0
+13e31200|	ori t1, t0, 1
+13c31200|	xori t1, t0, 1
+13931200|	slli t1, t0, 1
+13d31200|	srli t1, t0, 1
+13d31240|	srai t1, t0, 1
+b3836200|	add t2, t0, t1
+b3a36200|	slt t2, t0, t1
+b3b36200|	sltu t2, t0, t1
+b3f36200|	and t2, t0, t1
+b3e36200|	or t2, t0, t1
+b3c36200|	xor t2, t0, t1
+17050000|	auipc a0, 0
+97070080|	auipc a5, -524288
+17f5ff7f|	auipc a0, 524287
+b7770a00|	lui a5, 167
+b7070080|	lui a5, -524288
+b3936200|	sll t2, t0, t1
+b3d36200|	srl t2, t0, t1
+b3d36240|	sra t2, t0, t1
+b3836240|	sub t2, t0, t1
+3305a040|	neg a0, a0
+6ff09fdb|	j -584
+67800f8a|	jr -1888(t6)
+67800000|	ret
+ef028000|	jal t0, 8
+e7800200|	jalr ra, (t0)
+67830200|	jalr t1, (t0)
+67834200|	jalr t1, 4(t0)
+63846200|	beq t0, t1, 8
+63946200|	bne t0, t1, 8
+638e0200|	beqz t0, 28
+e39a0ffe|	bnez t6, -12
+635c0500|	bgez a0, 24
+63582005|	blez s2, 80
+63c46200|	blt t0, t1, 8
+e34005f8|	bltz a0, -128
+63e46200|	bltu t0, t1, 8
+63d46200|	bge t0, t1, 8
+63f46200|	bgeu t0, t1, 8
+03a30200|	lw t1, (t0)
+03a34200|	lw t1, 4(t0)
+03e30200|	lwu t1, (t0)
+03e34200|	lwu t1, 4(t0)
+03930200|	lh t1, (t0)
+03934200|	lh t1, 4(t0)
+03d30200|	lhu t1, (t0)
+03d34200|	lhu t1, 4(t0)
+03830200|	lb t1, (t0)
+03834200|	lb t1, 4(t0)
+03c30200|	lbu t1, (t0)
+03c34200|	lbu t1, 4(t0)
+23205300|	sw t1, (t0)
+23225300|	sw t1, 4(t0)
+23105300|	sh t1, (t0)
+23125300|	sh t1, 4(t0)
+23005300|	sb t1, (t0)
+23025300|	sb t1, 4(t0)
+0f00f00f|	fence
+1b831200|	addiw t1, t0, 1
+1b931200|	slliw t1, t0, 1
+1bd31200|	srliw t1, t0, 1
+1bd31240|	sraiw t1, t0, 1
+9b040400|	sext.w s1, s0
+bb035300|	addw t2, t1, t0
+bb135300|	sllw t2, t1, t0
+bb535300|	srlw t2, t1, t0
+bb535340|	sraw t2, t1, t0
+bb035340|	subw t2, t1, t0
+03b30200|	ld t1, (t0)
+03b34200|	ld t1, 4(t0)
+23305300|	sd t1, (t0)
+23325300|	sd t1, 4(t0)
+b3035302|	mul t2, t1, t0
+b3135302|	mulh t2, t1, t0
+b3335302|	mulhu t2, t1, t0
+b3235302|	mulhsu t2, t1, t0
+bb035302|	mulw t2, t1, t0
+b3435302|	div t2, t1, t0
+b3535302|	divu t2, t1, t0
+b3635302|	rem t2, t1, t0
+b3735302|	remu t2, t1, t0
+bb435302|	divw t2, t1, t0
+bb535302|	divuw t2, t1, t0
+bb635302|	remw t2, t1, t0
+bb735302|	remuw t2, t1, t0
+2fa30214|	lr.w.aq t1, (t0)
+2fb30214|	lr.d.aq t1, (t0)
+af23531c|	sc.w.aq t2, t0, (t1)
+af33531c|	sc.d.aq t2, t0, (t1)
+af23530c|	amoswap.w.aq t2, t0, (t1)
+af33530c|	amoswap.d.aq t2, t0, (t1)
+af235304|	amoadd.w.aq t2, t0, (t1)
+af335304|	amoadd.d.aq t2, t0, (t1)
+af235364|	amoand.w.aq t2, t0, (t1)
+af335364|	amoand.d.aq t2, t0, (t1)
+af235344|	amoor.w.aq t2, t0, (t1)
+af335344|	amoor.d.aq t2, t0, (t1)
+af235324|	amoxor.w.aq t2, t0, (t1)
+af335324|	amoxor.d.aq t2, t0, (t1)
+af2353a4|	amomax.w.aq t2, t0, (t1)
+af3353a4|	amomax.d.aq t2, t0, (t1)
+af2353e4|	amomaxu.w.aq t2, t0, (t1)
+af3353e4|	amomaxu.d.aq t2, t0, (t1)
+af235384|	amomin.w.aq t2, t0, (t1)
+af335384|	amomin.d.aq t2, t0, (t1)
+af2353c4|	amominu.w.aq t2, t0, (t1)
+af3353c4|	amominu.d.aq t2, t0, (t1)
 73000000|	ecall
 73001000|	ebreak
+07a00200|	flw ft0, (t0)
+07a04200|	flw ft0, 4(t0)
+27a00200|	fsw ft0, (t0)
+27a20200|	fsw ft0, 4(t0)
+d3000058|	fsqrt.s ft1, ft0, rne
