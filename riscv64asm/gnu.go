@@ -5,17 +5,20 @@
 package riscv64asm
 
 import (
+	"fmt"
 	"strconv"
 	"strings"
 )
 
 // GNUSyntax returns the GNU assembler syntax for the instruction, as defined by GNU binutils.
 // This form typically matches the syntax defined in the RISCV Manual.
-func GNUSyntax(inst Inst) string {
-	for _, alias := range gnuAliases {
-		m := alias.match(inst)
-		if m != "" {
-			return m
+func GNUSyntax(inst Inst, pc uint64, alias bool) string {
+	if alias {
+		for _, alias := range gnuAliases {
+			m := alias.match(inst, pc)
+			if m != "" {
+				return m
+			}
 		}
 	}
 	op := inst.Op.String()
@@ -35,9 +38,17 @@ func GNUSyntax(inst Inst) string {
 		if arg == nil {
 			break
 		}
-		args = append(args, arg.String())
+		args = append(args, gnuArg(arg, pc))
 	}
 	return op + " " + strings.Join(args, ", ")
+}
+
+func gnuArg(arg Arg, pc uint64) string {
+	switch arg := arg.(type) {
+	case PCRel:
+		return fmt.Sprintf("0x%x", uint64(arg)+pc)
+	}
+	return arg.String()
 }
 
 type alias struct {
@@ -46,7 +57,7 @@ type alias struct {
 	pattern string
 }
 
-func (a *alias) match(inst Inst) string {
+func (a *alias) match(inst Inst, pc uint64) string {
 	if inst.Op != a.op {
 		return ""
 	}
@@ -65,7 +76,7 @@ func (a *alias) match(inst Inst) string {
 		if arg == nil {
 			break
 		}
-		m = strings.ReplaceAll(m, "$"+strconv.Itoa(i), arg.String())
+		m = strings.ReplaceAll(m, "$"+strconv.Itoa(i), gnuArg(arg, pc))
 	}
 	return m
 }

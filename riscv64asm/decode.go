@@ -100,7 +100,7 @@ func decodeArg(aop instArg, x uint32) Arg {
 		imm |= (int32(x>>21) & (1<<10 - 1)) << 1
 		imm |= (int32(x>>20) & (1<<1 - 1)) << 11
 		imm |= (int32(x>>12) & (1<<8 - 1)) << 12
-		return Imm(signExtend(imm, 21))
+		return PCRel(signExtend(imm, 21))
 	case arg_imm12hilo:
 		//        25 |     | 11     7 |
 		// imm[11:5] | ... | imm[4:0] | ...
@@ -114,7 +114,7 @@ func decodeArg(aop instArg, x uint32) Arg {
 		imm |= (int32(x>>25) & (1<<6 - 1)) << 5
 		imm |= (int32(x>>8) & (1<<4 - 1)) << 1
 		imm |= (int32(x>>7) & (1<<1 - 1)) << 11
-		return Imm(signExtend(imm, 13))
+		return PCRel(signExtend(imm, 13))
 	case arg_shamtd:
 		imm := int32(x>>20) & (1<<6 - 1)
 		return Imm(imm)

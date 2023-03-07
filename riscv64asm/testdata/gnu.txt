@@ -1,15 +1,10 @@
 9382f27f|	addi t0, t0, 2047
 93820280|	addi t0, t0, -2048
 13841200|	addi s0, t0, 1
-93052000|	li a1, 2
-13000000|	nop
-93820500|	mv t0, a1
 13931200|	slli t1, t0, 1
 93a37203|	slti t2, t0, 55
 93b37203|	sltiu t2, t0, 55
-93321500|	seqz t0, a0
 13f31200|	andi t1, t0, 1
-1374f40f|	zext.b s0, s0
 13e31200|	ori t1, t0, 1
 13c31200|	xori t1, t0, 1
 13931200|	slli t1, t0, 1
@@ -30,25 +25,16 @@ b3936200|	sll t2, t0, t1
 b3d36200|	srl t2, t0, t1
 b3d36240|	sra t2, t0, t1
 b3836240|	sub t2, t0, t1
-3305a040|	neg a0, a0
-6ff09fdb|	j -584
-67800f8a|	jr -1888(t6)
-67800000|	ret
-ef028000|	jal t0, 8
+ef028000|	jal t0, 0x10008
 e7800200|	jalr ra, (t0)
 67830200|	jalr t1, (t0)
 67834200|	jalr t1, 4(t0)
-63846200|	beq t0, t1, 8
-63946200|	bne t0, t1, 8
-638e0200|	beqz t0, 28
-e39a0ffe|	bnez t6, -12
-635c0500|	bgez a0, 24
-63582005|	blez s2, 80
-63c46200|	blt t0, t1, 8
-e34005f8|	bltz a0, -128
-63e46200|	bltu t0, t1, 8
-63d46200|	bge t0, t1, 8
-63f46200|	bgeu t0, t1, 8
+63846200|	beq t0, t1, 0x10008
+63946200|	bne t0, t1, 0x10008
+63c46200|	blt t0, t1, 0x10008
+63e46200|	bltu t0, t1, 0x10008
+63d46200|	bge t0, t1, 0x10008
+63f46200|	bgeu t0, t1, 0x10008
 03a30200|	lw t1, (t0)
 03a34200|	lw t1, 4(t0)
 03e30200|	lwu t1, (t0)
@@ -72,7 +58,6 @@ e34005f8|	bltz a0, -128
 1b931200|	slliw t1, t0, 1
 1bd31200|	srliw t1, t0, 1
 1bd31240|	sraiw t1, t0, 1
-9b040400|	sext.w s1, s0
 bb035300|	addw t2, t1, t0
 bb135300|	sllw t2, t1, t0
 bb535300|	srlw t2, t1, t0

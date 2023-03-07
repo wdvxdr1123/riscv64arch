@@ -1,0 +1,15 @@
+93052000|	li a1, 2
+13000000|	nop
+93820500|	mv t0, a1
+93321500|	seqz t0, a0
+1374f40f|	zext.b s0, s0
+3305a040|	neg a0, a0
+6ff09fdb|	j 0xfdb8
+67800f8a|	jr -1888(t6)
+67800000|	ret
+638e0200|	beqz t0, 0x1001c
+e39a0ffe|	bnez t6, 0xfff4
+635c0500|	bgez a0, 0x10018
+63582005|	blez s2, 0x10050
+e34005f8|	bltz a0, 0xff80
+9b040400|	sext.w s1, s0

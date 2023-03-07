@@ -13,7 +13,7 @@ import (
 )
 
 func testDecode(t *testing.T, syntax string) {
-	input := filepath.Join("testdata", syntax+"cases.txt")
+	input := filepath.Join("testdata", syntax+".txt")
 	data, err := os.ReadFile(input)
 	if err != nil {
 		t.Fatal(err)
@@ -52,7 +52,9 @@ func testDecode(t *testing.T, syntax string) {
 		var out string
 		switch syntax {
 		case "gnu":
-			out = GNUSyntax(inst)
+			out = GNUSyntax(inst, 0x10000, false)
+		case "gnu_aliases":
+			out = GNUSyntax(inst, 0x10000, true)
 		case "plan9":
 			// todo
 		default:
@@ -74,6 +76,7 @@ func testDecode(t *testing.T, syntax string) {
 
 func TestDecodeGNUSyntax(t *testing.T) {
 	testDecode(t, "gnu")
+	testDecode(t, "gnu_aliases")
 }
 
 func TestDecodeGoSyntax(t *testing.T) {

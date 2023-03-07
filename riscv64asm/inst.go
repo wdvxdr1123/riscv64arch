@@ -44,7 +44,7 @@ func (i Inst) String() string {
 type Args [5]Arg
 
 // An Arg is a single instruction argument, one of these types:
-// Reg, Imm
+// Reg, Imm, PCRel, Mem, RoundingMode
 type Arg interface {
 	isArg()
 	String() string
@@ -174,6 +174,15 @@ func (i Imm) String() string {
 	return fmt.Sprintf("%d", int32(i))
 }
 
+// PCRel is a PC-relative offset, used only in branch instructions.
+type PCRel int32
+
+func (PCRel) isArg() {}
+
+func (i PCRel) String() string {
+	return fmt.Sprintf("pc+%d", int32(i))
+}
+
 // Mem is a memory reference.
 // The effective memory address is Base + Offset.
 type Mem struct {
@@ -189,33 +198,6 @@ func (m Mem) String() string {
 		return strconv.Itoa(int(m.Offset)) + base
 	}
 	return base
-}
-
-type FenceField uint8
-
-func (FenceField) isArg() {}
-
-func (f FenceField) String() string {
-	const (
-		i = 1 << (3 - iota)
-		o
-		r
-		w
-	)
-	var s string
-	if f&i == i {
-		s += "i"
-	}
-	if f&o == o {
-		s += "o"
-	}
-	if f&r == r {
-		s += "r"
-	}
-	if f&w == w {
-		s += "w"
-	}
-	return s
 }
 
 type RoundingMode uint8
