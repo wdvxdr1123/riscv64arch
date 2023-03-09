@@ -21,8 +21,3 @@ const (
 	arg_shamtd
 	arg_shamtw
 )
-
-const (
-	aq = 1 << 26
-	rl = 1 << 25
-)

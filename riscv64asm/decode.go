@@ -65,7 +65,7 @@ Search:
 			Enc:  x,
 			Len:  4,
 		}
-		transformInst(&inst)
+		editInst(&inst)
 		return inst, nil
 	}
 	return Inst{}, errUnknown
@@ -137,7 +137,11 @@ func mem(base Arg, offset Arg) Arg {
 	return Mem{Base: base.(Reg), Offset: int32(offset.(Imm))}
 }
 
-func transformInst(i *Inst) {
+func xreg2freg(r Reg) Reg {
+	return r - X0 + F0
+}
+
+func editInst(i *Inst) {
 	op := i.Op
 	if isAMO(op) {
 		switch op {
@@ -148,36 +152,39 @@ func transformInst(i *Inst) {
 			// op rd, rs2, (rs1)
 			i.Args[1], i.Args[2] = i.Args[2], mem(i.Args[1], nil)
 		}
-	}
-	if isFloatOp(op) {
+	} else if isFloatOp(op) {
 		switch op {
+		case FLW, FLD:
+			i.Args[0] = xreg2freg(i.Args[0].(Reg))
+			i.Args[1] = mem(i.Args[1], i.Args[2])
+			i.Args[2] = nil
 		case FSD, FSW:
 			// fsd rs2, offset(rs1)
 			rs1 := i.Args[0]
 			offset := i.Args[2]
-			i.Args[0] = i.Args[1].(Reg) - X0 + F0
+			i.Args[0] = xreg2freg(i.Args[1].(Reg))
 			i.Args[1] = mem(rs1, offset)
 			i.Args[2] = nil
-		case FLD, FLW, FCVTSW, FCVTSL, FCVTSWU, FCVTSLU, FCVTDW, FCVTDL, FCVTDWU, FCVTDLU, FMVWX, FMVDX:
-			i.Args[0] = i.Args[0].(Reg) - X0 + F0
+		case FCVTSW, FCVTSL, FCVTSWU, FCVTSLU, FCVTDW, FCVTDL, FCVTDWU, FCVTDLU, FMVWX, FMVDX:
+			i.Args[0] = xreg2freg(i.Args[0].(Reg))
 		case FCLASSS, FCLASSD, FCVTWS, FCVTLS, FCVTWUS, FCVTWD, FCVTLD, FCVTLUS, FCVTWUD, FCVTLUD, FMVXW, FMVXD:
-			i.Args[1] = i.Args[1].(Reg) - X0 + F0
+			i.Args[1] = xreg2freg(i.Args[1].(Reg))
 		case FEQS, FLTS, FLES, FEQD, FLTD, FLED:
-			i.Args[1] = i.Args[1].(Reg) - X0 + F0
-			i.Args[2] = i.Args[2].(Reg) - X0 + F0
+			i.Args[1] = xreg2freg(i.Args[1].(Reg))
+			i.Args[2] = xreg2freg(i.Args[2].(Reg))
 		default:
 			for index, arg := range i.Args {
 				if gp, ok := arg.(Reg); ok {
-					i.Args[index] = gp - X0 + F0
+					i.Args[index] = xreg2freg(gp)
 				}
 			}
 		}
 	}
 	switch i.Op {
-	case JALR, LD, LW, LWU, LH, LHU, LB, LBU, FLW, FLD:
+	case JALR, LD, LW, LWU, LH, LHU, LB, LBU:
 		i.Args[1] = mem(i.Args[1], i.Args[2])
 		i.Args[2] = nil
-	case SD, SW, SH, SB:
+	case SD, SW, SH, SB: // stores
 		i.Args[0], i.Args[1] = i.Args[1], mem(i.Args[0], i.Args[2])
 		i.Args[2] = nil
 	}

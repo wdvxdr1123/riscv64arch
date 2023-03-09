@@ -7,11 +7,10 @@ import (
 )
 
 // GoSyntax returns the Go assembler syntax for the instruction.
-func GoSyntax(inst Inst, pc uint64) string {
-	for _, alias := range goAlias {
-		m := alias.match(inst, pc, false)
-		if m != "" {
-			return m
+func GoSyntax(inst Inst, pc uint64, symname func(addr uint64) (sym string, base uint64)) string {
+	if symname == nil {
+		symname = func(addr uint64) (sym string, base uint64) {
+			return "", 0
 		}
 	}
 
@@ -26,21 +25,47 @@ func GoSyntax(inst Inst, pc uint64) string {
 		if _, ok := arg.(RoundingMode); ok {
 			break
 		}
-		args = append(args, goArg(arg, pc))
+		args = append(args, goArg(arg, pc, symname))
 	}
-	if len(args) == 0 {
-		return op
+
+	if isAMO(inst.Op) && inst.Op != LRW && inst.Op != LRD {
+		return op + " " + args[1] + ", " + args[2] + ", " + args[0]
 	}
+
+	if inst.Args[1] == inst.Args[2] {
+		switch inst.Op {
+		case FSGNJS:
+			return "MOVF" + " " + args[1] + ", " + args[0]
+		case FSGNJD:
+			return "MOVD" + " " + args[1] + ", " + args[0]
+		case FSGNJXS:
+			return "FABSS" + " " + args[1] + ", " + args[0]
+		case FSGNJXD:
+			return "FABSD" + " " + args[1] + ", " + args[0]
+		case FSGNJNS:
+			return "FNEGS" + " " + args[1] + ", " + args[0]
+		case FSGNJND:
+			return "FNEGD" + " " + args[1] + ", " + args[0]
+		}
+	}
+
 	switch inst.Op {
 	default:
+		switch len(args) {
+		case 0:
+			return op
+		}
 		args[0], args[len(args)-1] = args[len(args)-1], args[0]
+
+		return op + " " + strings.Join(args, ", ")
 	case JAL, JALR, BEQ, BNE, BGE, BGEU, BLT, BLTU:
-		// no
 		switch inst.Op {
-		case JAL:
-		case JALR:
+		case JAL, JALR:
+			if inst.Args[0] == X0 {
+				return "JMP " + args[1]
+			}
 		default:
-			if inst.Args[1] == ZERO {
+			if inst.Args[1] == X0 {
 				return op + "Z " + args[0] + ", " + args[2]
 			}
 		}
@@ -52,69 +77,36 @@ func GoSyntax(inst Inst, pc uint64) string {
 	case SD, SW, SH, SB, FSD, FSW: // stores
 		return plan9MOVOp[inst.Op] + " " + args[0] + ", " + args[1]
 	}
-
-	if isAMO(inst.Op) && inst.Op != LRW && inst.Op != LRD {
-		return op + " " + args[1] + ", " + args[0] + ", " + args[2]
-	}
-
-	if inst.Args[1] == inst.Args[2] {
-		switch inst.Op {
-		case FSGNJS:
-			return "MOVF" + " " + args[1] + ", " + args[2]
-		case FSGNJD:
-			return "MOVD" + " " + args[1] + ", " + args[2]
-		case FSGNJXS:
-			return "FABSS" + " " + args[1] + ", " + args[2]
-		case FSGNJXD:
-			return "FABSD" + " " + args[1] + ", " + args[2]
-		case FSGNJNS:
-			return "FNEGS" + " " + args[1] + ", " + args[2]
-		case FSGNJND:
-			return "FNEGD" + " " + args[1] + ", " + args[2]
-		}
-	}
-
 	return op + " " + strings.Join(args, ", ")
 }
 
-func goArg(arg Arg, pc uint64) string {
+// plan9Arg formats arg according to Plan 9 rules.
+func goArg(arg Arg, pc uint64, symname func(addr uint64) (sym string, base uint64)) string {
 	switch arg := arg.(type) {
 	case Reg:
-		r := arg
 		switch {
-		case X0 <= r && r <= X31:
-			return fmt.Sprintf("X%d", int(r-X0))
-		case F0 <= r && r <= F31:
-			return fmt.Sprintf("F%d", int(r-F0))
+		case X0 <= arg && arg <= X31:
+			return fmt.Sprintf("X%d", int(arg-X0))
+		case F0 <= arg && arg <= F31:
+			return fmt.Sprintf("F%d", int(arg-F0))
 		}
 	case Imm:
 		return "$" + arg.String()
 	case Mem:
-		base := "(" + goArg(arg.Base, pc) + ")"
+		base := "(" + goArg(arg.Base, pc, symname) + ")"
 		if arg.Offset != 0 {
 			return strconv.Itoa(int(arg.Offset)) + base
 		}
 		return base
 	case PCRel:
-		return fmt.Sprintf("%d(PC)", arg/4)
+		addr := pc + uint64(arg)
+		s, base := symname(addr)
+		if s != "" && addr == base {
+			return fmt.Sprintf("%s(SB)", s)
+		}
+		return fmt.Sprintf("%#x", addr)
 	}
 	return ""
-}
-
-var goAlias = [...]alias{
-	{FLD, Args{nil, nil}, "MOVD $1, $0"},
-	{FLW, Args{nil, nil}, "MOVF $1, $0"},
-	{FSD, Args{nil, nil}, "MOVD $0, $1"},
-	{FSW, Args{nil, nil}, "MOVF $0, $1"},
-	{XORI, Args{nil, nil, Imm(-1)}, "NOT $1, $0"},
-	{SUB, Args{nil, ZERO, nil}, "NEG $2, $0"},
-	{SUBW, Args{nil, ZERO, nil}, "NEGW $2, $0"},
-
-	{JAL, Args{ZERO, nil}, "JMP $1"},
-	{JALR, Args{ZERO, nil}, "JMP $1"},
-	{BEQ, Args{nil, ZERO, nil}, "BEQZ $0, $2"},
-	{SLTIU, Args{nil, nil, Imm(1)}, "SEQZ $1, $0"},
-	{SLTU, Args{nil, ZERO, nil}, "SNEZ $2, $0"},
 }
 
 var plan9MOVOp = map[Op]string{
@@ -127,10 +119,10 @@ var plan9MOVOp = map[Op]string{
 	LHU: "MOVHU",
 	LBU: "MOVBU",
 	FLD: "MOVD",
-	FLW: "MOVW",
+	FLW: "MOVF",
 	SW:  "MOVW",
 	SH:  "MOVH",
 	SB:  "MOVB",
 	FSD: "MOVD",
-	FSW: "MOVW",
+	FSW: "MOVF",
 }

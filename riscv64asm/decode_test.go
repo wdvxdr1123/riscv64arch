@@ -54,7 +54,7 @@ func testDecode(t *testing.T, syntax string) {
 		case "gnu", "gnu_aliases":
 			out = GNUSyntax(inst, 0x10000)
 		case "plan9":
-			out = GoSyntax(inst, 0x10000)
+			out = GoSyntax(inst, 0x10000, nil)
 		default:
 			t.Errorf("unknown syntax %q", syntax)
 			continue

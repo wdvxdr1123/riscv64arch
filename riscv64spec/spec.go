@@ -126,7 +126,6 @@ func main() {
 	})
 
 	tmpl, _ := template.New("").Funcs(template.FuncMap{
-		"hex":        hex,
 		"formatArgs": formatArgs,
 	}).Parse(genTemplate)
 
@@ -137,10 +136,6 @@ func main() {
 		log.Fatalf("gofmt error: %v", err)
 	}
 	fmt.Printf("%s", out)
-}
-
-func hex(i uint32) string {
-	return fmt.Sprintf("0x%x", i)
 }
 
 func formatArgs(args []string) string {
@@ -174,6 +169,6 @@ var opstr = [...]string{
 {{end}}}
 
 var instFormats = [...]instFormat{
-{{range .}}	{{"{"}} {{.GoName}}, {{hex .Mask}}, {{hex .Match}}, {{formatArgs .Args}}{{"}"}},
+{{range .}}	{{"{"}} {{.GoName}}, {{printf "%#x" .Mask}}, {{printf "%#x" .Match}}, {{formatArgs .Args}}{{"}"}},
 {{end}}}
 `
