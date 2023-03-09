@@ -63,6 +63,7 @@ Search:
 			Op:   f.op,
 			Args: args,
 			Enc:  x,
+			Len:  4,
 		}
 		transformInst(&inst)
 		return inst, nil
@@ -157,9 +158,9 @@ func transformInst(i *Inst) {
 			i.Args[0] = i.Args[1].(Reg) - X0 + F0
 			i.Args[1] = mem(rs1, offset)
 			i.Args[2] = nil
-		case FLD, FLW:
+		case FLD, FLW, FCVTSW, FCVTSL, FCVTSWU, FCVTSLU, FCVTDW, FCVTDL, FCVTDWU, FCVTDLU, FMVWX, FMVDX:
 			i.Args[0] = i.Args[0].(Reg) - X0 + F0
-		case FCLASSS, FCLASSD:
+		case FCLASSS, FCLASSD, FCVTWS, FCVTLS, FCVTWUS, FCVTWD, FCVTLD, FCVTLUS, FCVTWUD, FCVTLUD, FMVXW, FMVXD:
 			i.Args[1] = i.Args[1].(Reg) - X0 + F0
 		case FEQS, FLTS, FLES, FEQD, FLTD, FLED:
 			i.Args[1] = i.Args[1].(Reg) - X0 + F0
@@ -173,8 +174,11 @@ func transformInst(i *Inst) {
 		}
 	}
 	switch i.Op {
-	case JALR, LD, LW, LWU, LH, LHU, LB, LBU, SD, SW, SH, SB, FLW, FLD:
+	case JALR, LD, LW, LWU, LH, LHU, LB, LBU, FLW, FLD:
 		i.Args[1] = mem(i.Args[1], i.Args[2])
+		i.Args[2] = nil
+	case SD, SW, SH, SB:
+		i.Args[0], i.Args[1] = i.Args[1], mem(i.Args[0], i.Args[2])
 		i.Args[2] = nil
 	}
 }

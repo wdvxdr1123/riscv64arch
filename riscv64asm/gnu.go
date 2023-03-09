@@ -6,21 +6,19 @@ package riscv64asm
 
 import (
 	"fmt"
-	"strconv"
 	"strings"
 )
 
 // GNUSyntax returns the GNU assembler syntax for the instruction, as defined by GNU binutils.
 // This form typically matches the syntax defined in the RISCV Manual.
-func GNUSyntax(inst Inst, pc uint64, alias bool) string {
-	if alias {
-		for _, alias := range gnuAliases {
-			m := alias.match(inst, pc)
-			if m != "" {
-				return m
-			}
+func GNUSyntax(inst Inst, pc uint64) string {
+	for _, alias := range gnuAliases {
+		m := alias.match(inst, pc, true)
+		if m != "" {
+			return m
 		}
 	}
+
 	op := inst.Op.String()
 	if isAMO(inst.Op) {
 		if inst.Enc&(aq|rl) != 0 {
@@ -51,42 +49,12 @@ func gnuArg(arg Arg, pc uint64) string {
 	return arg.String()
 }
 
-type alias struct {
-	op      Op
-	arg     Args
-	pattern string
-}
-
-func (a *alias) match(inst Inst, pc uint64) string {
-	if inst.Op != a.op {
-		return ""
-	}
-
-	for i, arg := range a.arg {
-		if arg == nil {
-			continue
-		}
-		if arg != inst.Args[i] {
-			return ""
-		}
-	}
-
-	m := a.pattern
-	for i, arg := range inst.Args {
-		if arg == nil {
-			break
-		}
-		m = strings.ReplaceAll(m, "$"+strconv.Itoa(i), gnuArg(arg, pc))
-	}
-	return m
-}
-
 var gnuAliases = [...]alias{
 	{ADDI, Args{ZERO, ZERO, Imm(0)}, "nop"},
 	{ADDI, Args{nil, ZERO, nil}, "li $0, $2"},
 	{ADDI, Args{nil, nil, Imm(0)}, "mv $0, $1"},
 	{JAL, Args{ZERO, nil}, "j $1"},
-	{JALR, Args{ZERO, Mem{Base: RA}}, "ret"},
+	{JALR, Args{ZERO, Mem{Base: RA, Offset: 0}}, "ret"},
 	{JALR, Args{ZERO, nil}, "jr $1"},
 	{SUB, Args{nil, ZERO, nil}, "neg $0, $2"},
 	{SUBW, Args{nil, ZERO, nil}, "negw $0, $2"},

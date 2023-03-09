@@ -47,12 +47,12 @@ e7800200|	jalr ra, (t0)
 03834200|	lb t1, 4(t0)
 03c30200|	lbu t1, (t0)
 03c34200|	lbu t1, 4(t0)
-23205300|	sw t1, (t0)
-23225300|	sw t1, 4(t0)
-23105300|	sh t1, (t0)
-23125300|	sh t1, 4(t0)
-23005300|	sb t1, (t0)
-23025300|	sb t1, 4(t0)
+23205300|	sw t0, (t1)
+23225300|	sw t0, 4(t1)
+23105300|	sh t0, (t1)
+23125300|	sh t0, 4(t1)
+23005300|	sb t0, (t1)
+23025300|	sb t0, 4(t1)
 0f00f00f|	fence
 1b831200|	addiw t1, t0, 1
 1b931200|	slliw t1, t0, 1
@@ -65,8 +65,8 @@ bb535340|	sraw t2, t1, t0
 bb035340|	subw t2, t1, t0
 03b30200|	ld t1, (t0)
 03b34200|	ld t1, 4(t0)
-23305300|	sd t1, (t0)
-23325300|	sd t1, 4(t0)
+23305300|	sd t0, (t1)
+23325300|	sd t0, 4(t1)
 b3035302|	mul t2, t1, t0
 b3135302|	mulh t2, t1, t0
 b3335302|	mulhu t2, t1, t0
@@ -115,19 +115,19 @@ af3353c4|	amominu.d.aq t2, t0, (t1)
 53011028|	fmin.s ft2, ft0, ft1
 53111028|	fmax.s ft2, ft0, ft1
 d3000058|	fsqrt.s ft1, ft0, rne
-d31200c0|	fcvt.w.s ft5, ft0, rtz
-d31220c0|	fcvt.l.s ft5, ft0, rtz
-538002d0|	fcvt.s.w ft0, ft5, rne
-538022d0|	fcvt.s.l ft0, ft5, rne
-d31210c0|	fcvt.wu.s ft5, ft0, rtz
-d31230c0|	fcvt.lu.s ft5, ft0, rtz
-538012d0|	fcvt.s.wu ft0, ft5, rne
-538032d0|	fcvt.s.lu ft0, ft5, rne
+d31200c0|	fcvt.w.s t0, ft0, rtz
+d31220c0|	fcvt.l.s t0, ft0, rtz
+538002d0|	fcvt.s.w ft0, t0, rne
+538022d0|	fcvt.s.l ft0, t0, rne
+d31210c0|	fcvt.wu.s t0, ft0, rtz
+d31230c0|	fcvt.lu.s t0, ft0, rtz
+538012d0|	fcvt.s.wu ft0, t0, rne
+538032d0|	fcvt.s.lu ft0, t0, rne
 53011020|	fsgnj.s ft2, ft0, ft1
 53111020|	fsgnjn.s ft2, ft0, ft1
 53211020|	fsgnjx.s ft2, ft0, ft1
-d30200e0|	fmv.x.w ft5, ft0
-538002f0|	fmv.w.x ft0, ft5
+d30200e0|	fmv.x.w t0, ft0
+538002f0|	fmv.w.x ft0, t0
 43822018|	fmadd.s ft4, ft1, ft2, ft3, rne
 47822018|	fmsub.s ft4, ft1, ft2, ft3, rne
 4f822018|	fnmadd.s ft4, ft1, ft2, ft3, rne
@@ -148,21 +148,21 @@ d31200e2|	fclass.d t0, ft0
 5301102a|	fmin.d ft2, ft0, ft1
 5311102a|	fmax.d ft2, ft0, ft1
 d300005a|	fsqrt.d ft1, ft0, rne
-d31200c2|	fcvt.w.d ft5, ft0, rtz
-d31220c2|	fcvt.l.d ft5, ft0, rtz
-538002d2|	fcvt.d.w ft0, ft5, rne
-538022d2|	fcvt.d.l ft0, ft5, rne
-d31210c2|	fcvt.wu.d ft5, ft0, rtz
-d31230c2|	fcvt.lu.d ft5, ft0, rtz
-538012d2|	fcvt.d.wu ft0, ft5, rne
-538032d2|	fcvt.d.lu ft0, ft5, rne
+d31200c2|	fcvt.w.d t0, ft0, rtz
+d31220c2|	fcvt.l.d t0, ft0, rtz
+538002d2|	fcvt.d.w ft0, t0, rne
+538022d2|	fcvt.d.l ft0, t0, rne
+d31210c2|	fcvt.wu.d t0, ft0, rtz
+d31230c2|	fcvt.lu.d t0, ft0, rtz
+538012d2|	fcvt.d.wu ft0, t0, rne
+538032d2|	fcvt.d.lu ft0, t0, rne
 d3001040|	fcvt.s.d ft1, ft0, rne
 d3000042|	fcvt.d.s ft1, ft0, rne
 53011022|	fsgnj.d ft2, ft0, ft1
 53111022|	fsgnjn.d ft2, ft0, ft1
 53211022|	fsgnjx.d ft2, ft0, ft1
-d30200e2|	fmv.x.d ft5, ft0
-538002f2|	fmv.d.x ft0, ft5
+d30200e2|	fmv.x.d t0, ft0
+538002f2|	fmv.d.x ft0, t0
 4382201a|	fmadd.d ft4, ft1, ft2, ft3, rne
 4782201a|	fmsub.d ft4, ft1, ft2, ft3, rne
 4f82201a|	fnmadd.d ft4, ft1, ft2, ft3, rne

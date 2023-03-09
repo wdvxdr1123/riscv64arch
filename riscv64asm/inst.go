@@ -25,6 +25,7 @@ type Inst struct {
 	Op   Op     // Opcode mnemonic
 	Enc  uint32 // Raw encoding bits.
 	Args Args   // Instruction arguments, in RISCV manual order.
+	Len  int    // length of encoded instruction in bytes
 }
 
 func (i Inst) String() string {
@@ -250,4 +251,47 @@ func isFloatOp(op Op) bool {
 		return true
 	}
 	return false
+}
+
+type syntax uint8
+
+const (
+	gnu syntax = iota
+	plan9
+)
+
+type alias struct {
+	op      Op
+	arg     Args
+	pattern string
+}
+
+func (a *alias) match(inst Inst, pc uint64, gnu bool) string {
+	if inst.Op != a.op {
+		return ""
+	}
+
+	for i, arg := range a.arg {
+		if arg == nil {
+			continue
+		}
+		if arg != inst.Args[i] {
+			return ""
+		}
+	}
+
+	m := a.pattern
+	for i, arg := range inst.Args {
+		if arg == nil {
+			break
+		}
+		var argStr string
+		if gnu {
+			argStr = gnuArg(arg, pc)
+		} else {
+			argStr = goArg(arg, pc)
+		}
+		m = strings.ReplaceAll(m, "$"+strconv.Itoa(i), argStr)
+	}
+	return m
 }

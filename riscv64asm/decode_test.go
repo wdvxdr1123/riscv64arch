@@ -51,12 +51,10 @@ func testDecode(t *testing.T, syntax string) {
 		}
 		var out string
 		switch syntax {
-		case "gnu":
-			out = GNUSyntax(inst, 0x10000, false)
-		case "gnu_aliases":
-			out = GNUSyntax(inst, 0x10000, true)
+		case "gnu", "gnu_aliases":
+			out = GNUSyntax(inst, 0x10000)
 		case "plan9":
-			// todo
+			out = GoSyntax(inst, 0x10000)
 		default:
 			t.Errorf("unknown syntax %q", syntax)
 			continue
@@ -73,5 +71,5 @@ func TestDecodeGNUSyntax(t *testing.T) {
 }
 
 func TestDecodeGoSyntax(t *testing.T) {
-	// testDecode(t, "plan9")
+	testDecode(t, "plan9")
 }
