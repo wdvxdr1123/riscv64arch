@@ -97,33 +97,35 @@ func decodeArg(aop instArg, x uint32) Arg {
 	case arg_jimm20:
 		//      31 | 30     21 |      20 | 19      12 | 11
 		// imm[20] | imm[10:1] | imm[11] | imm[19:12] | ...
-		imm := (int32(x>>31) & (1<<1 - 1)) << 20
-		imm |= (int32(x>>21) & (1<<10 - 1)) << 1
-		imm |= (int32(x>>20) & (1<<1 - 1)) << 11
-		imm |= (int32(x>>12) & (1<<8 - 1)) << 12
+		imm := int32(x>>31) & (1<<1 - 1) << 20
+		imm |= int32(x>>21) & (1<<10 - 1) << 1
+		imm |= int32(x>>20) & (1<<1 - 1) << 11
+		imm |= int32(x>>12) & (1<<8 - 1) << 12
 		return PCRel(signExtend(imm, 21))
 	case arg_imm12hilo:
 		//        25 |     | 11     7 |
 		// imm[11:5] | ... | imm[4:0] | ...
-		imm := (int32(x>>25) & (1<<7 - 1)) << 5
-		imm |= (int32(x>>7) & (1<<5 - 1)) << 0
+		imm := int32(x>>25) & (1<<7 - 1) << 5
+		imm |= int32(x>>7) & (1<<5 - 1) << 0
 		return Imm(signExtend(imm, 12))
 	case arg_bimm12hilo:
 		//      31 | 30     25 |     | 11     8 |       7 |
 		// imm[12] | imm[10:5] | ... | imm[4:1] | imm[11] | ...
-		imm := (int32(x>>31) & (1<<1 - 1)) << 12
-		imm |= (int32(x>>25) & (1<<6 - 1)) << 5
-		imm |= (int32(x>>8) & (1<<4 - 1)) << 1
-		imm |= (int32(x>>7) & (1<<1 - 1)) << 11
+		imm := int32(x>>31) & (1<<1 - 1) << 12
+		imm |= int32(x>>25) & (1<<6 - 1) << 5
+		imm |= int32(x>>8) & (1<<4 - 1) << 1
+		imm |= int32(x>>7) & (1<<1 - 1) << 11
 		return PCRel(signExtend(imm, 13))
 	case arg_shamtd:
-		imm := int32(x>>20) & (1<<6 - 1)
-		return Imm(imm)
+		return Imm((x >> 20) & (1<<6 - 1))
 	case arg_shamtw:
-		imm := int32(x>>20) & (1<<5 - 1)
-		return Imm(imm)
+		return Imm((x >> 20) & (1<<5 - 1))
 	case arg_rs3:
 		return X0 + Reg((x>>27)&(1<<5-1))
+	case arg_pred:
+		return FenceField((x >> 24) & (1<<4 - 1))
+	case arg_succ:
+		return FenceField((x >> 20) & (1<<4 - 1))
 	case arg_rm:
 		return RoundingMode((x >> 12) & (1<<3 - 1))
 	}
@@ -155,6 +157,7 @@ func editInst(i *Inst) {
 	} else if isFloatOp(op) {
 		switch op {
 		case FLW, FLD:
+			// fld rs1, offset(rs2)
 			i.Args[0] = xreg2freg(i.Args[0].(Reg))
 			i.Args[1] = mem(i.Args[1], i.Args[2])
 			i.Args[2] = nil

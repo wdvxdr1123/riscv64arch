@@ -13,3 +13,8 @@ e39a0ffe|	bnez t6, 0xfff4
 63582005|	blez s2, 0x10050
 e34005f8|	bltz a0, 0xff80
 9b040400|	sext.w s1, s0
+0f00f00f|	fence
+d3200020|	fabs.s ft1, ft0
+d3100020|	fneg.s ft1, ft0
+d3200022|	fabs.d ft1, ft0
+d3100022|	fneg.d ft1, ft0

@@ -373,7 +373,7 @@ var instFormats = [...]instFormat{
 	{FCVTWUS, 0xfff0007f, 0xc0100053, instArgs{arg_rd, arg_rs1, arg_rm}},
 	{FDIVD, 0xfe00007f, 0x1a000053, instArgs{arg_rd, arg_rs1, arg_rs2, arg_rm}},
 	{FDIVS, 0xfe00007f, 0x18000053, instArgs{arg_rd, arg_rs1, arg_rs2, arg_rm}},
-	{FENCE, 0x707f, 0xf, instArgs{}},
+	{FENCE, 0x707f, 0xf, instArgs{arg_pred, arg_succ}},
 	{FEQD, 0xfe00707f, 0xa2002053, instArgs{arg_rd, arg_rs1, arg_rs2}},
 	{FEQS, 0xfe00707f, 0xa0002053, instArgs{arg_rd, arg_rs1, arg_rs2}},
 	{FLD, 0x707f, 0x3007, instArgs{arg_rd, arg_rs1, arg_imm12}},

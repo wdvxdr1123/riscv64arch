@@ -25,7 +25,7 @@ type Inst struct {
 	Op   Op     // Opcode mnemonic
 	Enc  uint32 // Raw encoding bits.
 	Args Args   // Instruction arguments, in RISCV manual order.
-	Len  int    // length of encoded instruction in bytes
+	Len  int    // Length of encoded instruction in bytes
 }
 
 func (i Inst) String() string {
@@ -198,6 +198,32 @@ func (m Mem) String() string {
 	return base
 }
 
+type FenceField uint8
+
+func (FenceField) isArg() {}
+func (f FenceField) String() string {
+	const (
+		i = 1 << (3 - iota)
+		o
+		r
+		w
+	)
+	var s string
+	if f&i == i {
+		s += "i"
+	}
+	if f&o == o {
+		s += "o"
+	}
+	if f&r == r {
+		s += "r"
+	}
+	if f&w == w {
+		s += "w"
+	}
+	return s
+}
+
 type RoundingMode uint8
 
 func (RoundingMode) isArg() {}
@@ -217,7 +243,7 @@ func (r RoundingMode) String() string {
 	case 0b111:
 		return "dyn"
 	}
-	return "Invalid"
+	return "BUG"
 }
 
 func isAMO(op Op) bool {

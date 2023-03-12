@@ -20,4 +20,6 @@ const (
 	arg_rs3
 	arg_shamtd
 	arg_shamtw
+	arg_pred
+	arg_succ
 )

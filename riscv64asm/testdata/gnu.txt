@@ -53,7 +53,6 @@ e7800200|	jalr ra, (t0)
 23125300|	sh t0, 4(t1)
 23005300|	sb t0, (t1)
 23025300|	sb t0, 4(t1)
-0f00f00f|	fence
 1b831200|	addiw t1, t0, 1
 1b931200|	slliw t1, t0, 1
 1bd31200|	srliw t1, t0, 1

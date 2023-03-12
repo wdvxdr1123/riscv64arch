@@ -18,12 +18,11 @@ func GoSyntax(inst Inst, pc uint64, symname func(addr uint64) (sym string, base 
 	op = strings.ReplaceAll(op, ".", "")
 	op = strings.ToUpper(op)
 	var args []string
+loop:
 	for _, arg := range inst.Args {
-		if arg == nil {
-			break
-		}
-		if _, ok := arg.(RoundingMode); ok {
-			break
+		switch arg.(type) {
+		case nil, RoundingMode, FenceField:
+			break loop
 		}
 		args = append(args, goArg(arg, pc, symname))
 	}

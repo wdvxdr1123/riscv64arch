@@ -35,7 +35,7 @@ func (i *Inst) GNUName() string {
 
 func (i *Inst) AddArg(arg string) {
 	switch arg {
-	case "aq", "rl", "imm12hi", "bimm12hi", "fm", "pred", "succ":
+	case "aq", "rl", "imm12hi", "bimm12hi", "fm":
 		return // ignore
 	case "imm12lo", "bimm12lo":
 		arg = strings.Replace(arg, "lo", "hilo", 1)
